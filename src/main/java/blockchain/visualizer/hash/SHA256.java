@@ -20,4 +20,12 @@ public class SHA256 {
         return builder.toString();
     }
 
+    public String merkle(String[] transactions) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        for(String str : transactions) {
+            md.update(str.getBytes());
+        }
+        return bytesToHex(md.digest());
+    }
+
 }

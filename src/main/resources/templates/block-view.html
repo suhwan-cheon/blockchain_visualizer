@@ -17,23 +17,48 @@
     <li class="nav-item"><a href="/" class="nav-link">해시</a></li>
     <li class="nav-item"><a href="/block/create" class="nav-link">블록 생성</a></li>
     <li class="nav-item"><a href="/block/view" class="nav-link">블록체인</a></li>
+    <li class="nav-item"><a href="/wallet" class="nav-link">지갑</a></li>
   </ul>
 </header>
 <div style="width: 200px; margin:0 auto">
   <tr th:each="block, blockStat : ${blockChain}">
     <span th:text="${blockStat.index} + 1"></span>
     <span>번째 블록</span>
-    <div>트랜잭션 리스트</div>
-    <p th:each="transaction, transactionStat : ${block.transactions}">
-      <span th:text="${transactionStat.index} + 1"></span>
-      <span th:text="|. ${transaction}|"></span>
-    </p>
+    <div>--- 블록 헤더 ---</div>
     <p>
-    <span th:text="|해시값 : ${block.blockHash}|">없음</span>
+    <td th:text="|현재 블록 주소 : ${block.blockHash}|">없음</td>
     </p>
     <p>
     <td th:text="|이전 블록 참조값 : ${block.previousBlockHash}|">없음</td>
     </p>
+    <p>
+      <span th:text="|머클루트 : ${block.merkleRoot}|">없음</span>
+    </p>
+    <p>
+    <td th:text="|논스값 : ${block.nonce}|">없음</td>
+    </p>
+    <p>
+    <td th:text="|생성시간 : ${block.timeStamp}|">없음</td>
+    </p>
+    <p>
+    <td th:text="|난이도 : ${block.bits}|">없음</td>
+    </p>
+    <p>
+    <td th:text="|생성시간 : ${block.timeStamp}|">없음</td>
+    </p>
+    <p>
+    <td th:text="|버전 : ${block.version}|">없음</td>
+    </p>
+
+    <div>--- 블록 바디 ---</div>
+    <p th:each="transaction, transactionStat : ${block.transactions}">
+      <span th:text="${transactionStat.index} + 1"></span>
+      <span th:text="|. ${transaction}|"></span>
+    </p>
+
+
+
+
   </tr>
 </div>
 

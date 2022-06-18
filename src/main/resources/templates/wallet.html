@@ -21,14 +21,18 @@
   </ul>
 </header>
 <div style="width: 200px; height: 200px; margin:0 auto">
-  <form th:action="@{/block/create}"  th:object="${blockDto}" method="post">
-    <span>트랜잭션 list</span>
-    <textarea type="text" th:field="*{transaction}"></textarea>
-    <button type="submit">블록 생성</button>
+  <form th:action="@{/wallet}" method="post">
+    <button type="submit">지갑생성</button>
   </form>
-  <span th:text="${createFlag}"></span>
+  <p>
+  <span>private key: </span>
+  <span th:text="${privateKey}"></span>
+  </p>
+  <p>
+    <span>public key: </span>
+    <span th:text="${publicKey}"></span>
+  </p>
 </div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 </body>
