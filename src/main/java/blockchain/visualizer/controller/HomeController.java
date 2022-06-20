@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 @Controller
 public class HomeController {
@@ -23,10 +23,18 @@ public class HomeController {
 
     ArrayList<Block> blockChain = new ArrayList<Block>();
     String createFlag = "";
-
-    Wallet wallet; // 사용자의 wallet
-    ArrayList<Wallet> testWallets = new ArrayList<>(); // TX 보낼 때 생성되는 임의의 Wallet들 저장 (추후 verift logic 짜게 될 때를 위해서)
-
+    
+    // Variable
+    public Wallet wallet; // 사용자의 wallet
+    public ArrayList<Wallet> testWallets = new ArrayList<>(); // TX 보낼 때 생성되는 임의의 Wallet들 저장 (추후 verift logic 짜게 될 때를 위해서)
+    public ArrayList<Transaction> allTx = new ArrayList<>(); // Miner 노드를 위해 모든 TX 가지고 있음
+    
+    public HomeController() {
+        allTx.add(new Transaction(new Wallet().getPublicKey(), new Wallet().getPublicKey(), 12.5, 0.01));
+        allTx.add(new Transaction(new Wallet().getPublicKey(), new Wallet().getPublicKey(), 7.7, 0.03));
+        allTx.add(new Transaction(new Wallet().getPublicKey(), new Wallet().getPublicKey(), 25.9, 0.1));
+    }
+    
     @GetMapping("/")
     public String hash(Model model, HashDto hashDto){
         model.addAttribute("hashDto", hashDto);
@@ -113,6 +121,7 @@ public class HomeController {
     
     @PostMapping("/transaction")
     public String makeTx(TxDto tx){
+        
         // TX 생성하기
         Wallet to = new Wallet();
         boolean check = false;
@@ -128,10 +137,13 @@ public class HomeController {
             testWallets.add(to);
         }
         
-        Transaction transaction = new Transaction(wallet.getPublicKey(), to.getPublicKey(), tx.getValue());
+        if(wallet == null) System.out.println("??????");
+        
+        Transaction transaction = new Transaction(wallet.getPublicKey(), to.getPublicKey(), tx.getValue(), tx.getFee());
         transaction.generateSignature(wallet.privateKey); // 서명
         
         transaction.setIdx(wallet.getTxs().size() + 1); // TX idx 붙여주기 (출력용)
+        allTx.add(transaction);
         
         wallet.getTxs().add(transaction);
         
@@ -144,6 +156,13 @@ public class HomeController {
         return "transaction-view";
     }
     
+    @GetMapping("/miner/transaction")
+    public String getMinerTx(Model model){
+        // allTx order by Fee
+        Collections.sort(allTx);
+        model.addAttribute("allTx", allTx);
+        return "miner-transaction";
+    }
     
     @GetMapping("/peer")
     public String getPeer(){

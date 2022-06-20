@@ -8,4 +8,5 @@ public class TxDto {
 	
 	private String receiver;
 	private double value;
+	private double fee;
 }

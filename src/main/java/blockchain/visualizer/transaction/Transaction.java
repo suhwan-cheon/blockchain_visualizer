@@ -8,13 +8,14 @@ import java.security.*;
 import java.util.ArrayList;
 
 @Getter @Setter
-public class Transaction {
+public class Transaction implements Comparable<Transaction>{
 
     public int idx;
     public String transactionId; //Contains a hash of transaction*
     public PublicKey sender; //Senders address/public key.
     public PublicKey receiver; //Recipients address/public key.
     public double value; //Contains the amount we wish to send to the recipient.
+    public double fee; // 수수료
     public byte[] signature; //This is to prevent anybody else from spending funds in our wallet.
 
     // public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
@@ -23,10 +24,11 @@ public class Transaction {
     private static int sequence = 0; //A rough count of how many transactions have been generated
     
     // Constructor:
-    public Transaction(PublicKey sender, PublicKey receiver, double value) {
+    public Transaction(PublicKey sender, PublicKey receiver, double value, double fee) {
         this.sender = sender;
         this.receiver = receiver;
         this.value = value;
+        this.fee = fee;
     }
     
     /**
@@ -50,5 +52,11 @@ public class Transaction {
                         StringUtil.getStringFromKey(receiver) +
                         Double.toString(value) + sequence
         );
+    }
+    
+    @Override
+    public int compareTo(Transaction tx) {
+        if(this.fee < tx.fee) return 1;
+        else return -1;
     }
 }
