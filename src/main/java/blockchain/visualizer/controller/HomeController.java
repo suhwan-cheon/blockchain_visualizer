@@ -23,13 +23,14 @@ public class HomeController {
     SHA256 sha256 = new SHA256();
     String hashvalue = "";
 
-    ArrayList<Block> blockChain = new ArrayList<Block>();
     String createFlag = "";
     
     // Variable
     public Wallet wallet; // 사용자의 wallet
     public ArrayList<Wallet> testWallets = new ArrayList<>(); // TX 보낼 때 생성되는 임의의 Wallet들 저장 (추후 verift logic 짜게 될 때를 위해서)
     public ArrayList<Transaction> allTx = new ArrayList<>(); // Miner 노드를 위해 모든 TX 가지고 있음
+    public ArrayList<Block> blockChain = new ArrayList<>(); // Block들
+    public Block block;
     
     public HomeController() {
         allTx.add(new Transaction(new Wallet().getPublicKey(), new Wallet().getPublicKey(), 12.5, 0.01));
@@ -78,7 +79,17 @@ public class HomeController {
 
     @GetMapping("/merkleTree")
     public String merkelTree(Model model) {
-        model.addAttribute("merkelRoot", SHA256.getMerkleRoot(allTx));
+        String merkleRoot = SHA256.getMerkleRoot(allTx);
+        model.addAttribute("merkelRoot", merkleRoot);
+        // block에 값 저장
+        String[] array = new String[allTx.size()];
+        int size = 0;
+        for(Transaction tx : allTx){
+            array[size++] = tx.toString();
+        }
+        String prevBlockHeaderHash = blockChain.size() == 0 ? "0" : SHA256.applySha256(blockChain.get(blockChain.size() - 1).getHeader());
+        block = new Block(array, prevBlockHeaderHash, LocalDate.now(), 0, 1, merkleRoot, 1);
+        blockChain.add(block);
         return "merkle-tree";
     }
 
@@ -172,6 +183,11 @@ public class HomeController {
         Collections.sort(allTx);
         model.addAttribute("allTx", allTx);
         return "miner-transaction";
+    }
+    
+    @GetMapping("/nonce")
+    public String getNonce(){
+        
     }
     
     @GetMapping("/peer")
