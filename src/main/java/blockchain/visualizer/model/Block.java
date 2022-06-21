@@ -47,4 +47,8 @@ public class Block {
     public String getHeader(){
         return previousBlockHash + timeStamp + nonce + version + merkleRoot + bits;
     }
+    
+    public String getHeaderWithoutNonce(){
+        return previousBlockHash + timeStamp + version + merkleRoot + bits;
+    }
 }

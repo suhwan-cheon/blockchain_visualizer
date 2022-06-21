@@ -31,6 +31,9 @@ public class HomeController {
     public ArrayList<Transaction> allTx = new ArrayList<>(); // Miner 노드를 위해 모든 TX 가지고 있음
     public ArrayList<Block> blockChain = new ArrayList<>(); // Block들
     public Block block;
+    public int count;
+    public String hash;
+    public boolean check = false;
     
     public HomeController() {
         allTx.add(new Transaction(new Wallet().getPublicKey(), new Wallet().getPublicKey(), 12.5, 0.01));
@@ -190,8 +193,44 @@ public class HomeController {
     }
     
     @GetMapping("/nonce")
-    public String getNonce(){
-        
+    public String getNonce(Model model){
+        if(!check) findNonce(); // 영상 시연용 nonce 값 미리 찾기
+        model.addAttribute("block", block);
+        model.addAttribute("blockDto", new BlockDto());
+        model.addAttribute("count", count);
+        model.addAttribute("hash", hash);
+        return "nonce";
+    }
+    
+    @PostMapping("/nonce")
+    public String checkNonce(BlockDto blockDto, Model model){
+        // block 헤더 값을 가져온다.
+        // 이때 더하는 값들은 "previousBlockHash + timeStamp + nonce + version + merkleRoot + bits" 이다.
+        block.setNonce(blockDto.getNonce());
+        String header = block.getHeader();
+        // 헤더 값을 Hash 한다.
+        hash = SHA256.applySha256(header);
+        System.out.println(hash);
+        // hash 값에서 앞에서 1번째 자리가 0인 nonce라면 마이닝 성공!
+        count = 0;
+        for(int i=0; i<hash.length(); i++){
+            char c = hash.charAt(i);
+            if(c == '0') count++;
+            else break;
+        }
+        return "redirect:/nonce";
+    }
+    
+    public void findNonce(){ // 영상 시연을 위해 nonce값 미리 찾아놓는 함수
+        for(int i=1; i<100000000; i++){
+            block.setNonce(i);
+            String temp = SHA256.applySha256(block.getHeader());
+            if(temp.charAt(0) == '0') {
+                System.out.println("nonce 값은 : " + i);
+                check = true;
+                break;
+            }
+        }
     }
     
     @GetMapping("/peer")

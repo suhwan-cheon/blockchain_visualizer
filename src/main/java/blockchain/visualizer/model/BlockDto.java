@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class BlockDto {
     private String transaction;
+    private int nonce;
 }
