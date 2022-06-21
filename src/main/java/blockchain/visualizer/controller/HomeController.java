@@ -13,7 +13,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -57,19 +59,27 @@ public class HomeController {
         return "block-create";
     }
 
-    @PostMapping("/block/create")
-    public String addBlock(@ModelAttribute("blockDto") BlockDto blockDto) throws NoSuchAlgorithmException {
+//    @PostMapping("/block/create")
+//    public String addBlock(@ModelAttribute("blockDto") BlockDto blockDto) throws NoSuchAlgorithmException {
+//
+//        System.out.println(blockDto.getTransaction());
+//
+//        String[] strings = blockDto.getTransaction().split("\\n");
+//        ArrayList<String> transactions = new ArrayList<String>(Arrays.asList(strings));
+//
+//
+//        Block block = new Block(strings, /// 가장 마지막 블록의 주소 참조
+//                (blockChain.size() == 0) ? 0 : blockChain.get(blockChain.size() - 1).getBlockHash(), LocalDate.now(), 1, 1, SHA256.getMerkleRoot(transactions), 1);
+//
+//        blockChain.add(block);
+//        createFlag = "생성 완료";
+//        return "redirect:/block/create";
+//    }
 
-        System.out.println(blockDto.getTransaction());
-
-        String[] transactions = blockDto.getTransaction().split("\\n");
-
-        Block block = new Block(transactions, /// 가장 마지막 블록의 주소 참조
-                (blockChain.size() == 0) ? 0 : blockChain.get(blockChain.size() - 1).getBlockHash(), LocalDate.now(), 1, 1, sha256.merkle(transactions), 1);
-
-        blockChain.add(block);
-        createFlag = "생성 완료";
-        return "redirect:/block/create";
+    @GetMapping("/merkleTree")
+    public String merkelTree(Model model) {
+        model.addAttribute("merkelRoot", SHA256.getMerkleRoot(allTx));
+        return "merkle-tree";
     }
 
     @GetMapping("/block/view")
