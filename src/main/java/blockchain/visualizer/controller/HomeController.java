@@ -87,7 +87,7 @@ public class HomeController {
         if(lists.size() == 0) merkleRoot = "";
         else merkleRoot = lists.get(lists.size() - 1).get(0);
 
-        model.addAttribute("merkelRoot", merkleRoot);
+        model.addAttribute("merkleRoot", lists);
         // block에 값 저장
         String[] array = new String[allTx.size()];
         int size = 0;
