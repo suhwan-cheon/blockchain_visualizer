@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.security.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @Getter @Setter
 public class Transaction implements Comparable<Transaction>{
@@ -63,5 +64,16 @@ public class Transaction implements Comparable<Transaction>{
     public int compareTo(Transaction tx) {
         if(this.fee < tx.fee) return 1;
         else return -1;
+    }
+    
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "sender=" + sender +
+                ", receiver=" + receiver +
+                ", value=" + value +
+                ", fee=" + fee +
+                ", signature=" + Arrays.toString(signature) +
+                '}';
     }
 }
