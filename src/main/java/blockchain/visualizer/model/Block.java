@@ -12,16 +12,16 @@ public class Block {
 
     private String[] transactions;
     private int blockHash;
-    private int previousBlockHash;
+    private String previousBlockHash;
     private LocalDate timeStamp;
     private int nonce;
     private int version;
     private String merkleRoot;
     private int bits;
 
-    public Block(String[] transactions, int previousBlockHash, LocalDate timeStamp, int nonce, int version, String merkleRoot, int bits) {
+    public Block(String[] transactions, String previousBlockHash, LocalDate timeStamp, int nonce, int version, String merkleRoot, int bits) {
         this.transactions = transactions;
-        this.blockHash = Arrays.hashCode(new int[] {Arrays.hashCode(transactions), this.previousBlockHash});
+        // this.blockHash = Arrays.hashCode(new int[] {Arrays.hashCode(transactions), this.previousBlockHash});
         this.previousBlockHash = previousBlockHash;
         this.timeStamp = timeStamp;
         this.nonce = nonce;
@@ -42,5 +42,9 @@ public class Block {
                 ", merkleRoot=" + merkleRoot +
                 ", bits=" + bits +
                 '}';
+    }
+    
+    public String getHeader(){
+        return previousBlockHash + timeStamp + nonce + version + merkleRoot + bits;
     }
 }
