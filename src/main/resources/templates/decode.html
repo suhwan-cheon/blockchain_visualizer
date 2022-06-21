@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BlockChain Visualizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+            <span class="fs-4">BlockChain Visualizer</span>
+        </a>
+
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="/decode" class="nav-link">블록 검증</a></li>
+            <li class="nav-item"><a href="/" class="nav-link">블록 체인</a></li>
+        </ul>
+    </header>
+    <!-- 마이너가 발표한 Nonce -->
+    <h3>Miner가 찾은 Nonce</h3>
+    <p>
+        <span th:text="| Nonce 값 : ${nonce} |">없음</span>
+    </p>
+    <br>
+    <!-- Nonce 입력 -->
+    <h5>Nonce 검증</h5>
+    <form th:action="@{/decode}" th:object="${blockDto}" method="post">
+        <input type="number" th:field="*{nonce}" class="form-control"
+               placeholder="Nonce">
+        <button type="submit">Nonce 값 검증</button>
+    </form>
+    <br>
+    <br>
+
+    <h3>Nonce 검증 결과</h3>
+    <p>
+        <span th:text="| Miner Hash 값 : ${minerHash} |">없음</span>
+    </p>
+    <p>
+        <span th:text="| Validator Hash 값 : ${validatorHash} |">없음</span>
+    </p>
+    <p>
+        <b><span th:if="${flag} == true" style="color:green">검증 성공!</span></b>
+        <b><span th:if="${flag} == false" style="color:red">검증 실패!</span></b>
+    </p>
+    <br>
+
+</body>
+</html>
