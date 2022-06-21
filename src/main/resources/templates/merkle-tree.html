@@ -21,6 +21,19 @@
   </ul>
 </header>
 
-<span th:text="${merkelRoot}"></span>
+<tr th:each="merkle, blockStat : ${merkleRoot}">
+  <span th:text="${blockStat.index} + 1"></span>
+  <span>번째 층 머클트리</span>
+
+  <div>--- 트랜잭션 해시값 ---</div>
+  <p th:each="m, mStat : ${merkle}">
+    <span th:text="${mStat.index} + 1"></span>
+    <span th:text="|. ${m}|"></span>
+  </p>
+
+
+
+
+</tr>
 </body>
 </html>
