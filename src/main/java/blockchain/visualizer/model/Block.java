@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class Block {
 
     private String[] transactions;
-    private int blockHash;
+    private String blockHash;
     private String previousBlockHash;
     private LocalDate timeStamp;
     private int nonce;

@@ -32,8 +32,8 @@ public class HomeController {
     public ArrayList<Block> blockChain = new ArrayList<>(); // Block들
     public Block block;
     public int count;
-    public String hash;
-    public boolean check = false;
+    public String hash, valHash;
+    public boolean check = false, flag = false;
     
     public HomeController() {
         allTx.add(new Transaction(new Wallet().getPublicKey(), new Wallet().getPublicKey(), 12.5, 0.01));
@@ -221,16 +221,23 @@ public class HomeController {
         return "redirect:/nonce";
     }
     
-    public void findNonce(){ // 영상 시연을 위해 nonce값 미리 찾아놓는 함수
-        for(int i=1; i<100000000; i++){
-            block.setNonce(i);
-            String temp = SHA256.applySha256(block.getHeader());
-            if(temp.charAt(0) == '0') {
-                System.out.println("nonce 값은 : " + i);
-                check = true;
-                break;
-            }
-        }
+    @GetMapping("/decode")
+    public String decoding(Model model){ // nonce 값이 맞는지 검증
+        model.addAttribute("nonce", block.getNonce());
+        model.addAttribute("blockDto", new BlockDto());
+        model.addAttribute("validatorHash", valHash);
+        model.addAttribute("minerHash", block.getBlockHash());
+        model.addAttribute("flag", flag);
+        return "decode";
+    }
+    
+    @PostMapping("/decode")
+    public String getNonceForDecode(BlockDto blockDto){
+        Block temp = new Block(block.getTransactions(), block.getPreviousBlockHash(), block.getTimeStamp(), blockDto.getNonce(), 1, block.getMerkleRoot(), 1);
+        valHash = SHA256.applySha256(temp.getHeader());
+        if(valHash.equals(block.getBlockHash())) flag = true; // 검증 성공
+        else flag = false; // 검증 실패
+        return "redirect:/decode";
     }
     
     @GetMapping("/peer")
@@ -246,5 +253,18 @@ public class HomeController {
     @GetMapping("/network")
     public String getNetwork(){
         return "network";
+    }
+    
+    public void findNonce(){ // 영상 시연을 위해 nonce값 미리 찾아놓는 함수
+        for(int i=1; i<100000000; i++){
+            block.setNonce(i);
+            String temp = SHA256.applySha256(block.getHeader());
+            if(temp.charAt(0) == '0') {
+                System.out.println("nonce 값은 : " + i);
+                block.setBlockHash(temp);
+                check = true;
+                break;
+            }
+        }
     }
 }
