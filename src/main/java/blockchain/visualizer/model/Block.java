@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class Block {
 
     private String[] transactions;
-    private int blockHash;
+    private String blockHash;
     private String previousBlockHash;
     private LocalDate timeStamp;
     private int nonce;
@@ -46,5 +46,9 @@ public class Block {
     
     public String getHeader(){
         return previousBlockHash + timeStamp + nonce + version + merkleRoot + bits;
+    }
+    
+    public String getHeaderWithoutNonce(){
+        return previousBlockHash + timeStamp + version + merkleRoot + bits;
     }
 }
