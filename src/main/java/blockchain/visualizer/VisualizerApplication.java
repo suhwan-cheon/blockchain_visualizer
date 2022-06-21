@@ -14,14 +14,14 @@ public class VisualizerApplication {
 
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-		Wallet walletA = new Wallet();
+		/*Wallet walletA = new Wallet();
         Wallet walletB = new Wallet();
 
         Transaction transaction = new Transaction(walletA.publicKey, walletB.publicKey, 5, null);
         transaction.generateSignature(walletA.privateKey);
 
         System.out.println(walletA.privateKey);
-        System.out.println(walletA.publicKey);
+        System.out.println(walletA.publicKey);*/
 
 		SpringApplication.run(VisualizerApplication.class, args);
 	}

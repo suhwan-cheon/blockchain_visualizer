@@ -1,21 +1,31 @@
 package blockchain.visualizer.model;
 
+import blockchain.visualizer.transaction.Transaction;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Map;
 
+@Getter @Setter
 public class Wallet {
 
     public PrivateKey privateKey;
     public PublicKey publicKey;
 
-
+    public String owner; // 지갑 주인 이름
+    public double balance; // 잔액
+    public ArrayList<Transaction> txs; // utxo 배열
 
     public Wallet() {
+        // utxos init
+        txs = new ArrayList<>();
         generateKeyPair();
     }
-
+    
     public void generateKeyPair() {
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDSA","BC");
