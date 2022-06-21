@@ -29,6 +29,11 @@ public class Transaction implements Comparable<Transaction>{
         this.receiver = receiver;
         this.value = value;
         this.fee = fee;
+        this.transactionId = StringUtil.applySha256(
+                StringUtil.getStringFromKey(sender) +
+                        StringUtil.getStringFromKey(receiver) +
+                        sequence++
+        );
     }
     
     /**

@@ -78,7 +78,7 @@ public class HomeController {
 
     @GetMapping("/merkleTree")
     public String merkelTree(Model model) {
-        model.addAttribute("merkelRoot", SHA256.getMerkleRoot(allTx));
+        model.addAttribute("merkleRoot", SHA256.getMerkleRoot(allTx));
         return "merkle-tree";
     }
 

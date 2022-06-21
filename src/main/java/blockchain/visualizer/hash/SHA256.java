@@ -45,14 +45,18 @@ public class SHA256 {
         }
     }
 
-    public static String getMerkleRoot(ArrayList<Transaction> transactions) {
+    public static List<List<String>> getMerkleRoot(ArrayList<Transaction> transactions) {
         int count = transactions.size();
+
+        List<List<String>> layers = new ArrayList<>();
 
         List<String> previousTreeLayer = new ArrayList<String>();
         for(Transaction transaction : transactions) {
             previousTreeLayer.add(transaction.transactionId);
         }
         List<String> treeLayer = previousTreeLayer;
+
+        layers.add(previousTreeLayer);
 
         while(count > 1) {
             treeLayer = new ArrayList<String>();
@@ -61,10 +65,11 @@ public class SHA256 {
             }
             count = treeLayer.size();
             previousTreeLayer = treeLayer;
+            layers.add(previousTreeLayer);
         }
 
         String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
-        return merkleRoot;
+        return layers;
     }
 
 }
