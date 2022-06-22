@@ -3,6 +3,7 @@ package blockchain.visualizer.controller;
 import blockchain.visualizer.hash.SHA256;
 import blockchain.visualizer.model.*;
 import blockchain.visualizer.transaction.Transaction;
+import blockchain.visualizer.transaction.TransactionOutput;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class HomeController {
@@ -148,8 +150,8 @@ public class HomeController {
     }
     
     @PostMapping("/transaction")
-    public String makeTx(TxDto tx){
-        
+    public String makeTx(Model model, TxDto tx, RedirectAttributes redirectAttributes){
+
         // TX 생성하기
         Wallet to = new Wallet();
         boolean check = false;
@@ -166,7 +168,19 @@ public class HomeController {
         }
         
         if(wallet == null) System.out.println("??????");
-        
+
+        ArrayList<Transaction> txs = wallet.getTxs();
+        double utxoSum = 0;
+        for (Transaction transaction : txs) {
+            for (TransactionOutput output : transaction.getOutputs()) {
+                utxoSum += output.value;
+            }
+        }
+        if (tx.getValue() > utxoSum) {
+            redirectAttributes.addFlashAttribute("errorMessage", "transaction 생성 오류 : not enough balance");
+            return "redirect:/transaction";
+        }
+
         Transaction transaction = new Transaction(wallet.getPublicKey(), to.getPublicKey(), tx.getValue(), tx.getFee());
         transaction.generateSignature(wallet.privateKey); // 서명
         
@@ -174,7 +188,7 @@ public class HomeController {
         allTx.add(transaction);
         
         wallet.getTxs().add(transaction);
-        
+
         return "redirect:/transaction";
     }
     
