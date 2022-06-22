@@ -170,10 +170,6 @@ public class HomeController {
         if(wallet == null) System.out.println("??????");
 
 
-
-
-
-
         ArrayList<Transaction> txs = wallet.getTxs();
         double utxoSum = 0;
         for (Transaction transaction : txs) {
@@ -181,10 +177,9 @@ public class HomeController {
                 utxoSum += output.value;
             }
         }
-        System.out.println(utxoSum);
-        System.out.println(tx.getValue());
+
         if (tx.getValue() > utxoSum) {
-            redirectAttributes.addFlashAttribute("errorMessage", "transaction 생성 오류 : not enough balance");
+            redirectAttributes.addFlashAttribute("message", "transaction 생성 오류 : not enough balance");
             return "redirect:/transaction";
         }
 
@@ -195,7 +190,7 @@ public class HomeController {
         allTx.add(transaction);
         
         wallet.getTxs().add(transaction);
-
+        redirectAttributes.addFlashAttribute("message", "transaction 생성 완료");
         return "redirect:/transaction";
     }
     
