@@ -1,6 +1,7 @@
 package blockchain.visualizer.model;
 
 import blockchain.visualizer.transaction.Transaction;
+import blockchain.visualizer.transaction.TransactionOutput;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +24,18 @@ public class Wallet {
     public Wallet() {
         // utxos init
         txs = new ArrayList<>();
+
+
         generateKeyPair();
+        Transaction transaction = new Transaction(publicKey, publicKey, 100.0, 0);
+
+        TransactionOutput transactionOutput = new TransactionOutput(publicKey, 100.0F, "123");
+        ArrayList<TransactionOutput> transactionOutputs = new ArrayList<TransactionOutput>();
+        transactionOutputs.add(transactionOutput);
+        transaction.setOutputs(transactionOutputs);
+
+        txs.add(transaction);
+
     }
     
     public void generateKeyPair() {
