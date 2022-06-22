@@ -19,6 +19,10 @@ public class Transaction implements Comparable<Transaction>{
     public double fee; // 수수료
     public byte[] signature; //This is to prevent anybody else from spending funds in our wallet.
 
+    public void setOutputs(ArrayList<TransactionOutput> outputs) {
+        this.outputs = outputs;
+    }
+
     // public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
     public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
 
