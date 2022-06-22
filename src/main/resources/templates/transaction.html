@@ -32,8 +32,8 @@
                placeholder="Fee">
         <button type="submit" onclick="alert('작성한 Transaction 생성을 요청합니다!')">Transaction 생성</button>
     </form>
-    <div th:if="${errorMessage}">
-        <div th:text="${errorMessage}"></div>
+    <div th:if="${message}">
+        <div th:text="${message}"></div>
     </div>
 </div>
 
