@@ -184,13 +184,19 @@ public class HomeController {
         }
 
         Transaction transaction = new Transaction(wallet.getPublicKey(), to.getPublicKey(), tx.getValue(), tx.getFee());
+        Transaction transaction2 = new Transaction(wallet.getPublicKey(), wallet.getPublicKey(), utxoSum - tx.getValue(), 0);
         transaction.generateSignature(wallet.privateKey); // 서명
-        
+
         transaction.setIdx(wallet.getTxs().size() + 1); // TX idx 붙여주기 (출력용)
         allTx.add(transaction);
-        
+        allTx.add(transaction2);
+
         wallet.getTxs().add(transaction);
+
+        wallet.getTxs().add(transaction2);
+
         redirectAttributes.addFlashAttribute("message", "transaction 생성 완료");
+
         return "redirect:/transaction";
     }
     
