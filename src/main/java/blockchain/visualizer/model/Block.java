@@ -21,7 +21,7 @@ public class Block {
 
     public Block(String[] transactions, String previousBlockHash, LocalDate timeStamp, int nonce, int version, String merkleRoot, int bits) {
         this.transactions = transactions;
-        // this.blockHash = Arrays.hashCode(new int[] {Arrays.hashCode(transactions), this.previousBlockHash});
+        this.blockHash = Integer.toString(Arrays.hashCode(new int[] {Arrays.hashCode(transactions)}));
         this.previousBlockHash = previousBlockHash;
         this.timeStamp = timeStamp;
         this.nonce = nonce;

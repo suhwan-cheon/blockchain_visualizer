@@ -14,19 +14,54 @@
   </a>
 
   <ul class="nav nav-pills">
-    <li class="nav-item"><a href="/" class="nav-link">해시</a></li>
-    <li class="nav-item"><a href="/block/create" class="nav-link">블록 생성</a></li>
-    <li class="nav-item"><a href="/block/view" class="nav-link">블록체인</a></li>
-    <li class="nav-item"><a href="/wallet" class="nav-link">지갑</a></li>
+    <li class="nav-item"><a href="/miner/transaction" class="nav-link">TX 보기</a></li>
+    <li class="nav-item"><a href="/merkleTree" class="nav-link">Merkle Tree</a></li>
+    <li class="nav-item"><a href="/nonce" class="nav-link">nonce 계산</a></li>
+    <li class="nav-item"><a href="/mining" class="nav-link">블록 마이닝</a></li>
   </ul>
 </header>
 <div style="width: 200px; height: 200px; margin:0 auto">
-  <form th:action="@{/block/create}"  th:object="${blockDto}" method="post">
-    <span>트랜잭션 list</span>
-    <textarea type="text" th:field="*{transaction}"></textarea>
-    <button type="submit">블록 생성</button>
-  </form>
-  <span th:text="${createFlag}"></span>
+    <div>--- 블록 완성 여부 확인 ---</div>
+    <p>
+    <span th:text="|머클루트 : ${flag1}|">없음</span>
+    </p>
+    <p>
+    <span th:text="|논스 : ${flag2}|">없음</span>
+    </p>
+    <form th:action="@{/block/create}" method="post">
+        <button>블록 생성!</button>
+    </form>
+    <span th:text="${createFlag}"></span>
+    <th:block th:if="${block != null}">
+    <div>--- 블록 헤더 ---</div>
+    <p>
+    <span th:text="|현재 블록 주소 : ${block.blockHash}|">없음</span>
+    </p>
+    <p>
+    <span th:text="|이전 블록 참조값 : ${block.previousBlockHash}|">없음</span>
+    </p>
+    <p>
+      <span th:text="|머클루트 : ${block.merkleRoot}|">없음</span>
+    </p>
+    <p>
+    <span th:text="|논스값 : ${block.nonce}|">없음</span>
+    </p>
+    <p>
+    <span th:text="|생성시간 : ${block.timeStamp}|">없음</span>
+    </p>
+    <p>
+    <span th:text="|난이도 : ${block.bits}|">없음</span>
+    </p>
+    <p>
+    <span th:text="|버전 : ${block.version}|">없음</span>
+    </p>
+
+    <div>--- 블록 바디 ---</div>
+    <p th:each="transaction, transactionStat : ${block.transactions}">
+      <span th:text="${transactionStat.index} + 1"></span>
+      <span th:text="|. ${transaction}|"></span>
+    </p>
+        </th:block>
 </div>
 
 

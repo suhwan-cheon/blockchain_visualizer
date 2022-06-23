@@ -33,14 +33,18 @@ public class HomeController {
     public ArrayList<Transaction> allTx = new ArrayList<>(); // Miner 노드를 위해 모든 TX 가지고 있음
     public ArrayList<Block> blockChain = new ArrayList<>(); // Block들
     public Block block;
+    public Block blockt;
     public int count;
     public String hash, valHash;
     public boolean check = false, flag = false;
+    public boolean flag1 = false, flag2 = false;
     
     public HomeController() {
         allTx.add(new Transaction(new Wallet().getPublicKey(), new Wallet().getPublicKey(), 12.5, 0.01));
         allTx.add(new Transaction(new Wallet().getPublicKey(), new Wallet().getPublicKey(), 7.7, 0.03));
         allTx.add(new Transaction(new Wallet().getPublicKey(), new Wallet().getPublicKey(), 25.9, 0.1));
+
+
     }
     
     @GetMapping("/")
@@ -58,29 +62,25 @@ public class HomeController {
     }
 
     @GetMapping("/block/create")
-    public String createBlock(Model model, BlockDto blockDto){
-        model.addAttribute("blockDto", blockDto);
+    public String createBlock(Model model){
+        model.addAttribute("block", blockt);
+        model.addAttribute("flag1", flag1);
+        model.addAttribute("flag2", flag2);
         model.addAttribute("createFlag", createFlag);
         createFlag = "";
         return "block-create";
     }
 
-//    @PostMapping("/block/create")
-//    public String addBlock(@ModelAttribute("blockDto") BlockDto blockDto) throws NoSuchAlgorithmException {
-//
-//        System.out.println(blockDto.getTransaction());
-//
-//        String[] strings = blockDto.getTransaction().split("\\n");
-//        ArrayList<String> transactions = new ArrayList<String>(Arrays.asList(strings));
-//
-//
-//        Block block = new Block(strings, /// 가장 마지막 블록의 주소 참조
-//                (blockChain.size() == 0) ? 0 : blockChain.get(blockChain.size() - 1).getBlockHash(), LocalDate.now(), 1, 1, SHA256.getMerkleRoot(transactions), 1);
-//
-//        blockChain.add(block);
-//        createFlag = "생성 완료";
-//        return "redirect:/block/create";
-//    }
+
+    @PostMapping("/block/create")
+    public String addBlock() {
+        if(flag1 && flag2) {
+            createFlag = "생성 완료";
+            blockt = block;
+        }
+
+        return "redirect:/block/create";
+    }
 
     @GetMapping("/merkleTree")
     public String merkelTree(Model model) {
@@ -99,6 +99,7 @@ public class HomeController {
         String prevBlockHeaderHash = blockChain.size() == 0 ? "0" : SHA256.applySha256(blockChain.get(blockChain.size() - 1).getHeader());
         block = new Block(array, prevBlockHeaderHash, LocalDate.now(), 0, 1, merkleRoot, 1);
         blockChain.add(block);
+        flag1 = true;
         return "merkle-tree";
     }
 
@@ -221,6 +222,7 @@ public class HomeController {
         model.addAttribute("blockDto", new BlockDto());
         model.addAttribute("count", count);
         model.addAttribute("hash", hash);
+
         return "nonce";
     }
     
@@ -240,6 +242,7 @@ public class HomeController {
             if(c == '0') count++;
             else break;
         }
+        flag2 = true;
         return "redirect:/nonce";
     }
     
